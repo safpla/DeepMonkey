@@ -1,26 +1,24 @@
-import h5py
 import tensorflow as tf
+import deepMonkeyData
 
 
-filename = "deepMonkey.hdf5"
-f = h5py.File(filename,"r")
-dataset = f["monkeyData"]
-labelset = f["monkeyLabel"]
-
-learningRate = 0.001
-trainingIters = 1000
-batchSize = 100
-displayStep = 20
+learning_rate = 0.001
+training_iters = 1000
+batch_size = 50
+display_step = 20
 height = 256
-width = 200
-numChannel = 3
-numClasses = 10
+width = 128
+num_channel = 3
+num_classes = 10
 dropout = 0.6
+filename = "/mnt/hgfs/Social/+social/+vad/+data/deepMonkey.hdf5"
+dataset = deepMonkeyData.DataSet(filename, num_classes)
+dataset.shuffle()
 
 # define placeholder
-x = tf.placeholder(tf.type.float32, [batchSize, height, width, numChannel])
-y = tf.placeholder(tf.type.float32, [batchSize, numClasses])
-keep_prob = tf.placeholder(tf.type.float32)
+x = tf.placeholder(tf.float32, [batch_size, height, width, num_channel])
+y = tf.placeholder(tf.float32, [batch_size, num_classes])
+keep_prob = tf.placeholder(tf.float32)
 
 
 # convolution
@@ -49,8 +47,8 @@ def alex_net(_X, _weights, _biases, _dropout):
 
     conv3 = conv2d('conv3', norm2, _weights['wc3'], _biases['bc3'], strides=[1, 4, 4, 1])
 
-    conv4 = conv2d('conv4', conv3, _weights['wc4'], _biases['bc4'], strides=[1, 2, 1, 1])
-    pool4 = max_pool('pool4', conv4, kernel=[1, 2, 2, 1], strides=[1, 2, 2, 1])
+    conv4 = conv2d('conv4', conv3, _weights['wc4'], _biases['bc4'], strides=[1, 2, 2, 1])
+    pool4 = max_pool('pool4', conv4, kernel=[1, 2, 2, 1], strides=[1, 2, 1, 1])
 
     conv5 = conv2d('conv5', pool4, _weights['wc5'], _biases['bc5'], strides=[1, 1, 1, 1])
     pool5 = max_pool('pool5', conv5, kernel=[1, 2, 2, 1], strides=[1, 2, 2, 1])
@@ -65,31 +63,31 @@ def alex_net(_X, _weights, _biases, _dropout):
     fc7 = tf.nn.bias_add(tf.matmul(fc_relu6, _weights['fc7']), _biases['fc7'])
     fc_relu7 = tf.nn.relu(fc7, name='fc7')
 
-    fc8 = tf.nn.bias_add(tf.matmul(fc_relu7, _weigths['fc8']), _biases['fc8'], name='fc8')
+    fc8 = tf.nn.bias_add(tf.matmul(fc_relu7, _weights['fc8']), _biases['fc8'], name='fc8')
 
     return fc8
 
 
 # define net parameters
 weights = {
-    'wc1': tf.Variable(tf.random_normal([3, 3, 3, 32])),
-    'wc2': tf.Variable(tf.random_normal([3, 3, 32, 64])),
-    'wc3': tf.Variable(tf.random_normal([4, 4, 64, 128])),
-    'wc4': tf.Variable(tf.random_normal([4, 4, 128, 256])),
-    'wc5': tf.Variable(tf.random_normal([3, 3, 256, 256])),
-    'fc6': tf.Variable(tf.random_normal([3*3*256, 1024])),
-    'fc7': tf.Variable(tf.random_normal([1024, 512])),
-    'fc8': tf.Variable(tf.random_normal([512, 10]))
+    'wc1': tf.Variable(tf.random_normal([3, 3, 3, 16])),
+    'wc2': tf.Variable(tf.random_normal([3, 3, 16, 32])),
+    'wc3': tf.Variable(tf.random_normal([4, 4, 32, 64])),
+    'wc4': tf.Variable(tf.random_normal([4, 4, 64, 64])),
+    'wc5': tf.Variable(tf.random_normal([3, 3, 64, 64])),
+    'fc6': tf.Variable(tf.random_normal([4*4*64, 256])),
+    'fc7': tf.Variable(tf.random_normal([256, 128])),
+    'fc8': tf.Variable(tf.random_normal([128, 10]))
 }
 
 biases = {
-    'bc1': tf.Variable(tf.random_normal([32])),
-    'bc2': tf.Variable(tf.random_normal([64])),
-    'bc3': tf.Variable(tf.random_normal([128])),
-    'bc4': tf.Variable(tf.random_normal([256])),
-    'bc5': tf.Variable(tf.random_normal([256])),
-    'fc6': tf.Variable(tf.random_normal([1024])),
-    'fc7': tf.Variable(tf.random_normal([512])),
+    'bc1': tf.Variable(tf.random_normal([16])),
+    'bc2': tf.Variable(tf.random_normal([32])),
+    'bc3': tf.Variable(tf.random_normal([64])),
+    'bc4': tf.Variable(tf.random_normal([64])),
+    'bc5': tf.Variable(tf.random_normal([64])),
+    'fc6': tf.Variable(tf.random_normal([256])),
+    'fc7': tf.Variable(tf.random_normal([128])),
     'fc8': tf.Variable(tf.random_normal([10]))
 }
 
@@ -98,7 +96,7 @@ biases = {
 pred = alex_net(x, weights, biases, keep_prob)
 
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))
-optimizer = tf.train.AdamOptimizer(learning_rate=learningRate).minimize(cost)
+optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
 correct_pred = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
@@ -108,5 +106,12 @@ init = tf.initialize_all_variables()
 with tf.Session() as sess:
     sess.run(init)
     step = 1
-    while step < trainingIters:
-        batch_xs, batch_ys = m
+    while step < training_iters:
+        batch_xs, batch_ys = dataset.next_batch(batch_size)
+        if step % 20 == 0:
+            train_accuracy = accuracy.eval(feed_dict={
+                x: batch_xs, y: batch_ys
+            })
+            print("step %d, training accuracy %g" % (step, train_accuracy))
+        sess.run(optimizer, feed_dict={x: batch_xs, y: batch_ys})
+
