@@ -1,6 +1,7 @@
 import tensorflow as tf
 import deepMonkeyData
-
+from tensorflow.python.platform import gfile
+import time
 
 learning_rate = 0.001
 training_iters = 1000
@@ -11,7 +12,7 @@ width = 128
 num_channel = 3
 num_classes = 10
 dropout = 0.6
-filename = "/mnt/hgfs/Social/+social/+vad/+data/deepMonkey.hdf5"
+filename = "/home/leo/Data/DeepMonkey/deepMonkey.hdf5"
 dataset = deepMonkeyData.DataSet(filename, num_classes)
 dataset.shuffle()
 
@@ -95,23 +96,32 @@ biases = {
 # build the model
 pred = alex_net(x, weights, biases, keep_prob)
 
-cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))
+cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y))
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
 correct_pred = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
+saver = tf.train.Saver()
+
 init = tf.initialize_all_variables()
 
+time1 = time.time()
 with tf.Session() as sess:
     sess.run(init)
     step = 1
     while step < training_iters:
         batch_xs, batch_ys = dataset.next_batch(batch_size)
-        if step % 20 == 0:
+        if step % 1 == 0:
             train_accuracy = accuracy.eval(feed_dict={
                 x: batch_xs, y: batch_ys
             })
             print("step %d, training accuracy %g" % (step, train_accuracy))
         sess.run(optimizer, feed_dict={x: batch_xs, y: batch_ys})
+	step += 1
 
+    saver_path = saver.save(sess, "/home/leo/GitHub/DeepMonkey/Models/model.ckpt")
+    print "Model saved in file:", saver_path
+
+time2 = time.time()
+print time2 - time1
