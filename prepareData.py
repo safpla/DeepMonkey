@@ -2,9 +2,10 @@ import tensorflow as tf
 import deepMonkeyData
 from tensorflow.python.platform import gfile
 import time
+import socket
 
 learning_rate = 0.001
-training_iters = 1000
+training_iters = 10
 batch_size = 50
 display_step = 20
 height = 256
@@ -12,7 +13,20 @@ width = 128
 num_channel = 3
 num_classes = 10
 dropout = 0.6
-filename = "/home/leo/Data/DeepMonkey/deepMonkey.hdf5"
+use_pretrained_model = 0
+
+hostname = socket.gethostname()
+if hostname == 'leo-virtual-machine':
+    filename = "/mnt/hgfs/Social/+social/+vad/+data/deepMonkey.hdf5"
+    model_file = "/home/leo/GitHub/DeepMonkey/Models/model.ckpt"
+    model_file_new = "/home/leo/GitHub/DeepMonkey/Models/model_new.ckpt"
+elif hostname == 'haowen-E535':
+    filename = "/home/leo/Data/DeepMonkey/deepMonkey.hdf5"
+    model_file = "/home/leo/GitHub/DeepMonkey/Models/model.ckpt"
+    model_file_new = "/home/leo/GitHub/DeepMonkey/Models/model_new.ckpt"
+else:
+    print('unrecognized computer')
+
 dataset = deepMonkeyData.DataSet(filename, num_classes)
 dataset.shuffle()
 
@@ -104,11 +118,14 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
 saver = tf.train.Saver()
 
-init = tf.initialize_all_variables()
-
 time1 = time.time()
 with tf.Session() as sess:
-    sess.run(init)
+    if use_pretrained_model == 1:
+        saver.restore(sess, model_file)
+    else:
+        init = tf.initialize_all_variables()
+        sess.run(init)
+
     step = 1
     while step < training_iters:
         batch_xs, batch_ys = dataset.next_batch(batch_size)
@@ -118,10 +135,10 @@ with tf.Session() as sess:
             })
             print("step %d, training accuracy %g" % (step, train_accuracy))
         sess.run(optimizer, feed_dict={x: batch_xs, y: batch_ys})
-	step += 1
+    step += 1
 
-    saver_path = saver.save(sess, "/home/leo/GitHub/DeepMonkey/Models/model.ckpt")
-    print "Model saved in file:", saver_path
+    saver_path = saver.save(sess, model_file_new)
+    print("Model saved in file:", saver_path)
 
 time2 = time.time()
-print time2 - time1
+print(time2 - time1)
