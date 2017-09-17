@@ -1,11 +1,12 @@
-import tensorflow as tf
-import deepMonkeyData
-from tensorflow.python.platform import gfile
-import time
 import socket
+import time
+
+import tensorflow as tf
+
+from src import deepMonkeyData
 
 learning_rate = 0.001
-training_iters = 10
+training_iters = 3000
 batch_size = 50
 display_step = 20
 height = 256
@@ -13,7 +14,7 @@ width = 128
 num_channel = 3
 num_classes = 10
 dropout = 0.6
-use_pretrained_model = 0
+use_pretrained_model = 1
 
 hostname = socket.gethostname()
 if hostname == 'leo-virtual-machine':
@@ -135,7 +136,7 @@ with tf.Session() as sess:
             })
             print("step %d, training accuracy %g" % (step, train_accuracy))
         sess.run(optimizer, feed_dict={x: batch_xs, y: batch_ys})
-    step += 1
+    	step += 1
 
     saver_path = saver.save(sess, model_file_new)
     print("Model saved in file:", saver_path)

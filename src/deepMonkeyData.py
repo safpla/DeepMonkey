@@ -7,7 +7,7 @@ class DataSet(object):
         f = h5py.File(filename, "r")
         self._dataset = f["monkeyData"]
         self._labelset = f["monkeyLabel"]
-        self._num_examples = self._labelset.len();
+        self._num_examples = self._labelset.len()
         self._epochs_completed = 0
         self._index_in_epoch = 0
         self._num_classes = num_classes
@@ -30,7 +30,7 @@ class DataSet(object):
     def epochs_completed(self):
         return self._epochs_completed
 
-    def next_batch(self, batch_size):
+    def next_batch(self, batch_size, sparse=False):
         start = self._index_in_epoch
         self._index_in_epoch += batch_size
         if self._index_in_epoch > self._num_examples:
@@ -46,15 +46,17 @@ class DataSet(object):
         batch_index = self._index[start:end]
         batch_index = list(np.sort(batch_index))
         label = self._labelset[batch_index]
-        label_sparse = np.zeros([batch_size, self._num_classes])
-        data = np.zeros([batch_size, 3, self._shape_of_data[2], self._shape_of_data[3]])
-        data_raw = self._dataset[batch_index]
-        data[:, 0:2, :, :] = data_raw
-        data[:, 2, :, :] = data_raw[:, 0, :, :] - data_raw[:, 1, :, :]
+        data = self._dataset[batch_index]
+        data = data / 255
         data = np.transpose(data, (0, 3, 2, 1))
-        for i in xrange(batch_size):
-            label_sparse[i][label[i]] = 1
-        return data, label_sparse
+
+        if sparse:
+            label_sparse = np.zeros([batch_size, self._num_classes])
+            for i in range(batch_size):
+                label_sparse[i][label[i]] = 1
+            return data, label_sparse
+        else:
+            return data, label
 
     def shuffle(self):
         np.random.shuffle(self._index)
