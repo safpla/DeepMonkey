@@ -1,0 +1,16 @@
+Selection	View	Channel	Begin Time (s)	End Time (s)	Low Freq (Hz)	High Freq (Hz)	Max Freq (Hz)	Call Type
+1	Spectrogram 1	1	150.43	150.73	4000.0	18000.0	18000.0	Phee
+2	Spectrogram 1	1	178.32	178.4	4000.0	18000.0	18000.0	Trill
+3	Spectrogram 1	1	254.0	254.83	4000.0	18000.0	18000.0	Phee
+4	Spectrogram 1	1	257.64	257.67	4000.0	18000.0	18000.0	Trill
+5	Spectrogram 1	1	335.63	335.82	4000.0	18000.0	18000.0	Phee
+6	Spectrogram 1	1	482.51	482.82	4000.0	18000.0	18000.0	Trill
+7	Spectrogram 1	1	574.27	574.32	4000.0	18000.0	18000.0	Trill
+8	Spectrogram 1	1	574.4	574.43	4000.0	18000.0	18000.0	Trill
+9	Spectrogram 1	1	765.03	765.08	4000.0	18000.0	18000.0	Trill
+10	Spectrogram 1	1	800.46	800.7	4000.0	18000.0	18000.0	Trill
+11	Spectrogram 1	1	920.96	921.07	4000.0	18000.0	18000.0	Trill
+12	Spectrogram 1	1	1142.1	1143.06	4000.0	18000.0	18000.0	Trill
+13	Spectrogram 1	1	1242.27	1242.51	4000.0	18000.0	18000.0	Trill
+14	Spectrogram 1	1	1260.19	1260.99	4000.0	18000.0	18000.0	Trill
+15	Spectrogram 1	1	1344.8	1345.89	4000.0	18000.0	18000.0	Phee

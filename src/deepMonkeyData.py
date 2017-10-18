@@ -47,7 +47,7 @@ class DataSet(object):
         batch_index = list(np.sort(batch_index))
         label = self._labelset[batch_index]
         data = self._dataset[batch_index]
-        data = data / 255
+        # data = data / 255
         data = np.transpose(data, (0, 3, 2, 1))
 
         if sparse:

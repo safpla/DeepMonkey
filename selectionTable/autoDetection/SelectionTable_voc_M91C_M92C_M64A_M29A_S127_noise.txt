@@ -1,0 +1,1 @@
+Selection	View	Channel	Begin Time (s)	End Time (s)	Low Freq (Hz)	High Freq (Hz)	Max Freq (Hz)	Call Type	Energy Diff	Energy Par	Energy Diff (wl)	Energy Par (wl)	AHR	Exception

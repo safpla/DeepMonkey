@@ -1,0 +1,26 @@
+Selection	View	Channel	Begin Time (s)	End Time (s)	Low Freq (Hz)	High Freq (Hz)	Max Freq (Hz)	Call Type
+1	Spectrogram 1	2	3.654	8.381	1580.5	20114.9	6250.0	Noise
+2	Spectrogram 1	2	11.141	14.251	1436.8	20258.6	3515.6	Noise
+3	Spectrogram 1	2	22.007	27.300	2011.5	20977.0	6054.7	Noise
+4	Spectrogram 1	2	43.643	44.080	0.0	22988.5	195.3	Sound
+5	Spectrogram 1	2	85.272	86.683	0.0	21839.1	390.6	Sound
+6	Spectrogram 1	2	100.983	107.701	0.0	20402.3	195.3	Noise
+7	Spectrogram 1	2	108.841	109.405	0.0	15517.2	195.3	Sound
+8	Spectrogram 1	2	221.820	222.091	574.7	14655.2	585.9	Sound
+9	Spectrogram 1	2	227.866	228.078	0.0	17097.7	195.3	Sound
+10	Spectrogram 1	2	260.092	260.231	0.0	14367.8	195.3	Sound
+11	Spectrogram 1	2	270.060	278.057	0.0	22270.1	8007.8	Noise
+15	Spectrogram 1	2	388.276	388.607	0.0	13505.7	390.6	Sound
+16	Spectrogram 1	2	394.385	394.551	0.0	13505.7	195.3	Sound
+17	Spectrogram 1	2	401.474	401.640	431.0	17816.1	7812.5	Sound
+18	Spectrogram 1	2	407.000	407.252	143.7	15086.2	195.3	Sound
+19	Spectrogram 1	2	476.847	477.006	0.0	18247.1	390.6	Sound
+20	Spectrogram 1	2	485.687	491.073	0.0	16810.3	195.3	Noise
+21	Spectrogram 1	2	479.379	484.713	0.0	18103.4	7812.5	Noise
+22	Spectrogram 1	2	643.722	647.565	0.0	15660.9	195.3	Noise
+23	Spectrogram 1	2	686.419	688.002	0.0	11781.6	390.6	Sound
+24	Spectrogram 1	2	853.563	855.206	0.0	10488.5	390.6	Sound
+25	Spectrogram 1	2	961.994	962.213	0.0	14798.9	390.6	Sound
+26	Spectrogram 1	2	1080.364	1085.201	0.0	19540.2	195.3	Noise
+27	Spectrogram 1	2	1151.361	1156.203	0.0	20114.9	7812.5	Noise
+28	Spectrogram 1	2	1349.825	1350.050	0.0	19540.2	195.3	Sound

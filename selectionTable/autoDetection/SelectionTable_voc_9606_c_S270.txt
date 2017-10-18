@@ -1,0 +1,4 @@
+Selection	View	Channel	Begin Time (s)	End Time (s)	Low Freq (Hz)	High Freq (Hz)	Max Freq (Hz)	Call Type
+1	Spectrogram 1	1	4.393	4.698	6210.2	19665.6	8000	Trill
+2	Spectrogram 1	1	5.238	5.640	5144.0	20987.7	8000	Trill
+3	Spectrogram 1	1	6.160	7.270	6481.5	22016.5	18000	Twitter

@@ -1,0 +1,4 @@
+Selection	View	Channel	Begin Time (s)	End Time (s)	Low Freq (Hz)	High Freq (Hz)	Max Freq (Hz)	Call Type
+1	Spectrogram 1	2	124.247	136.967	135.1	19594.6	8007.8	Noise
+2	Spectrogram 1	2	141.632	146.694	0.0	20405.4	8593.7	Noise
+3	Spectrogram 1	2	3.472	6.321	540.5	16621.6	585.9	Noise
