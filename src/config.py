@@ -21,7 +21,9 @@ def load_arguments():
     parser.add_argument('--shift_frame', type=float, default=0.8, help='persent')
     parser.add_argument('--FS', type=int, default=50000, help='fs')
     parser.add_argument('--batch_size', type=int, default=128, help='batch size')
-
+    parser.add_argument('--wav_filename', type=str, help='path of wave file')
+    parser.add_argument('--table_filename', type=str, help='path of input selection table')
+    parser.add_argument('--table_filename_new', type=str, help='path of output selection table')
     args = parser.parse_args()
     return args
- 
+

@@ -11,7 +11,7 @@ import time
 # tf.device('/gpu:1')
 # specify where the pre_trained model is
 pre_trained_model_path = '../Models/VGG_pretrain/vgg_16.ckpt'
-load_previous_model = True 
+load_previous_model = True
 previous_model_path = '../Models/M93A_9606/-700'
 # specify where the new model will be restored
 new_model_path = '../Models/M93A_9606_tc/'
@@ -22,7 +22,7 @@ tf.gfile.MakeDirs(summaries_dir)
 
 num_classes = 10
 training_iters = 5000
-batch_size = 64 
+batch_size = 64
 learning_rate = 0.0001
 lr_decay = 0.9
 data_valid_file_name = "../Data/deepMonkey224_M93A_test_new.hdf5"
@@ -39,7 +39,7 @@ y_pred, _ = vgg16.vgg_16(x_inputs,
                       is_training=is_training_placeholder,
                       dropout_keep_prob=0.5,
                       scope='vgg_16')
-variables_to_restore = slim.get_variables_to_restore(exclude=['vgg_16/fc8']) 
+variables_to_restore = slim.get_variables_to_restore(exclude=['vgg_16/fc8'])
 print(variables_to_restore)
 correct_prediction = tf.equal(tf.cast(tf.argmax(y_pred, 1), tf.int32),
                               tf.reshape(y_inputs, [-1]))
@@ -85,10 +85,9 @@ with tf.Session(config=configproto) as sess:
         if step % 10 == 0:
             feed_dict = {x_inputs: batch_xs, y_inputs: batch_ys, is_training_placeholder: False, lr: _lr}
             train_accuracy, train_cost, summary = sess.run([accuracy, cost, summary_merged], feed_dict=feed_dict)
-            train_writer.add_summary(summary, step)            
+            train_writer.add_summary(summary, step)
             print("step %d, training accuracy %g, loss %g speed: %g s/step"
                     %(step, train_accuracy, train_cost, time.time()-start_time))
-            
         if step % 100 == 0:
             # validation
             valid_accuracys = 0
@@ -103,7 +102,6 @@ with tf.Session(config=configproto) as sess:
             save_path = saver.save(sess, new_model_path, global_step=step)
             print('the save path is ', save_path)
         step += 1
-
 
 """
 # show image

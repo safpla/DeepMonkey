@@ -41,16 +41,16 @@ def extract_data(wav_filenames, call_segs, hdf5_filename):
             sig = np.fromstring(sig, dtype=np.short)
             sig = np.reshape(sig, (-1, nchannels))
             sig = np.transpose(sig)
-            
+
             height = DATA_HEIGHT
             width = round(((MAX_LSTM_STEP -1) * SHIFT_FRAME + 1) * DATA_WIDTH)
 
             _, _, specPar = spectrogram(
-                    sig[:][0], 
-                    fs=Fs, window='hann', 
-                    nperseg=WINSIZE_SPEC, 
-                    noverlap=OVERLAP_SPEC, 
-                    scaling='spectrum', 
+                    sig[:][0],
+                    fs=Fs, window='hann',
+                    nperseg=WINSIZE_SPEC,
+                    noverlap=OVERLAP_SPEC,
+                    scaling='spectrum',
                     mode='magnitude')
             specPar = np.log(specPar)
             specParPad = cv2.resize(specPar, (width, height))
@@ -66,7 +66,7 @@ def extract_data(wav_filenames, call_segs, hdf5_filename):
             specRefPad = cv2.resize(specRef, (width, height))
 
             specDifPad = specParPad - specRefPad
-            
+
             for j in range(MAX_LSTM_STEP):
                 buf[:,:,0,j] = specParPad[:,j*int(DATA_WIDTH * SHIFT_FRAME) : j*int(DATA_WIDTH * SHIFT_FRAME) + DATA_WIDTH]
                 buf[:,:,1,j] = specRefPad[:,j*int(DATA_WIDTH * SHIFT_FRAME) : j*int(DATA_WIDTH * SHIFT_FRAME) + DATA_WIDTH]
@@ -93,9 +93,13 @@ if __name__ == '__main__':
     parMic = args.parMic
     refMic = args.refMic
     boxMic = args.boxMic
-    wav_filenames = ['../Vocalization/M93A/voc_M93A_c_S' + session_num + '.wav']
-    table_filenames = ['../selectionTable/autoDetection/SelectionTable_voc_M93A_c_S' + session_num + '.txt']
-    table_filenames_new = ['../selectionTable/recheck/SelectionTable_voc_M93A_c_S' + session_num + '.txt']
+    wav_filenames = [args.wav_filename]
+    table_filenames = [args.table_filename]
+    table_filenames_new = [args.table_filename_new]
+
+    #wav_filenames = ['../Vocalization/M93A/voc_M93A_c_S' + session_num + '.wav']
+    #table_filenames = ['../selectionTable/autoDetection/SelectionTable_voc_M93A_c_S' + session_num + '.txt']
+    #table_filenames_new = ['../selectionTable/recheck/SelectionTable_voc_M93A_c_S' + session_num + '.txt']
     model_file = '../Models/M93A_9606_tc/-1100'
     call_segs = utilizer.extract_call_seg(table_filenames, args)
     configproto = tf.ConfigProto()
@@ -108,10 +112,9 @@ if __name__ == '__main__':
         for wav_filename, call_seg in zip(wav_filenames, call_segs):
             call_seg_new = []
             for call in call_seg:
-                call.wav_filename = wav_filename 
+                call.wav_filename = wav_filename
                 specPar = call.extract_spec(parMic)
                 specRef = call.extract_spec(refMic)
-            
                 specPar = Image.fromarray(specPar)
                 specRef = Image.fromarray(specRef)
                 specPar = specPar.resize((224,224))
@@ -136,9 +139,8 @@ if __name__ == '__main__':
                     call_seg_new.append(call)
             print(type(call_seg_new))
             call_segs_new.append(call_seg_new)
-    utilizer.write_to_selectionTable(table_filenames_new, call_segs_new) 
+    utilizer.write_to_selectionTable(table_filenames_new, call_segs_new)
 
 
 
-    
 
